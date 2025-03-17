@@ -1,0 +1,30 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Admin Dashboard
+    link(rel="stylesheet" href="/chart.css")
+    script(src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js")
+  body
+    #info
+      h1 Admin Dashboard
+      p Monitoring Coordinates
+    #charts
+      .chart
+        canvas#xChart
+      .chart
+        canvas#yChart
+      .chart
+        canvas#zChart
+      .chart(style="width: 370px; height: 370px;")
+        canvas#doughnutChart(width="370" height="370")
+    #status
+      h2 Status: 
+      span#statusText WAITING
+      a(href="/coordinat" target="_blank" style="display: block; margin-top: 10px; text-decoration: underline; color: white; font-size: smaller;")
+        | Simulation Location
+    script(src="/adminDashboard.js")
+    

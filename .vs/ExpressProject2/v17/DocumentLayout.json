@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\aalpe\\source\\repos\\ExpressProject2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6E22B449-A188-4E6B-876C-573DAE6A6DA7}|ExpressProject2.esproj|c:\\users\\aalpe\\source\\repos\\expressproject2\\public\\admindashboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{6E22B449-A188-4E6B-876C-573DAE6A6DA7}|ExpressProject2.esproj|solutionrelative:public\\admindashboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "adminDashboard.js",
+              "DocumentMoniker": "C:\\Users\\aalpe\\source\\repos\\ExpressProject2\\public\\adminDashboard.js",
+              "RelativeDocumentMoniker": "public\\adminDashboard.js",
+              "ToolTip": "C:\\Users\\aalpe\\source\\repos\\ExpressProject2\\public\\adminDashboard.js",
+              "RelativeToolTip": "public\\adminDashboard.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-03-17T03:45:53.571Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

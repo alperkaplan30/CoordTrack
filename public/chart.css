@@ -1,0 +1,62 @@
+body {
+    font-family: 'Copperplate Gothic', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #000; 
+    color: #fff; 
+}
+
+#info {
+    text-align: center;
+    margin: 20px;
+    color: #fff;
+}
+
+#charts {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    max-width: 1400px;
+}
+
+.chart {
+    flex: 1;
+    min-width: 300px;
+    margin: 10px;
+    background: white; 
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+#status {
+    text-align: center; 
+    margin: 20px 0;
+}
+
+#statusText {
+    font-size: 24px;
+    color: blue; 
+}
+
+    #statusText.waiting {
+        color: blue;
+    }
+
+    #statusText.in-progress {
+        color: orange;
+    }
+
+    #statusText.success {
+        color: green;
+    }
+
+    #statusText.failed {
+        color: red;
+    }

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <PackageJsonName Condition="$(PackageJsonName) == ''">expressproject2</PackageJsonName>
+    <PackageJsonVersion Condition="$(PackageJsonVersion) == ''">0.0.0</PackageJsonVersion>
+    <PackageJsonPrivate Condition="$(PackageJsonPrivate) == ''">true</PackageJsonPrivate>
+    <PackageJsonScriptsStart Condition="$(PackageJsonScriptsStart) == ''">node ./bin/www</PackageJsonScriptsStart>
+    <PackageJsonDependenciesChartJs Condition="$(PackageJsonDependenciesChartJs) == ''">^4.4.3</PackageJsonDependenciesChartJs>
+    <PackageJsonDependenciesChartjsAdapterDateFns Condition="$(PackageJsonDependenciesChartjsAdapterDateFns) == ''">^3.0.0</PackageJsonDependenciesChartjsAdapterDateFns>
+    <PackageJsonDependenciesCookieParser Condition="$(PackageJsonDependenciesCookieParser) == ''">~1.4.4</PackageJsonDependenciesCookieParser>
+    <PackageJsonDependenciesCors Condition="$(PackageJsonDependenciesCors) == ''">^2.8.5</PackageJsonDependenciesCors>
+    <PackageJsonDependenciesDateFns Condition="$(PackageJsonDependenciesDateFns) == ''">^3.6.0</PackageJsonDependenciesDateFns>
+    <PackageJsonDependenciesDebug Condition="$(PackageJsonDependenciesDebug) == ''">~2.6.9</PackageJsonDependenciesDebug>
+    <PackageJsonDependenciesExpress Condition="$(PackageJsonDependenciesExpress) == ''">~4.16.1</PackageJsonDependenciesExpress>
+    <PackageJsonDependenciesHttpErrors Condition="$(PackageJsonDependenciesHttpErrors) == ''">~1.6.3</PackageJsonDependenciesHttpErrors>
+    <PackageJsonDependenciesMorgan Condition="$(PackageJsonDependenciesMorgan) == ''">~1.9.1</PackageJsonDependenciesMorgan>
+    <PackageJsonDependenciesNode Condition="$(PackageJsonDependenciesNode) == ''">^20.16.0</PackageJsonDependenciesNode>
+    <PackageJsonDependenciesParse Condition="$(PackageJsonDependenciesParse) == ''">^5.3.0</PackageJsonDependenciesParse>
+    <PackageJsonDependenciesPath Condition="$(PackageJsonDependenciesPath) == ''">^0.12.7</PackageJsonDependenciesPath>
+    <PackageJsonDependenciesPug Condition="$(PackageJsonDependenciesPug) == ''">2.0.0-beta11</PackageJsonDependenciesPug>
+    <PackageJsonDependenciesSocketIo Condition="$(PackageJsonDependenciesSocketIo) == ''">^4.7.5</PackageJsonDependenciesSocketIo>
+    <PackageJsonDependenciesSocketIoClient Condition="$(PackageJsonDependenciesSocketIoClient) == ''">^4.7.5</PackageJsonDependenciesSocketIoClient>
+    <PackageJsonDevdependenciesEslint Condition="$(PackageJsonDevdependenciesEslint) == ''">^9.8.0</PackageJsonDevdependenciesEslint>
+  </PropertyGroup>
+</Project>

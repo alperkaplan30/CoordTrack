@@ -1,0 +1,194 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title 3D Coordinate Plane
+    style.
+      body { margin: 0; overflow: hidden; }
+      canvas { display: block; }
+      #info {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 5px;
+        border-radius: 5px;
+      }
+      #coordinates {
+        position: absolute;
+        top: 50px;
+        left: 10px;
+        color: white;
+        max-height: 90%;
+        overflow-y: auto;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 5px;
+        border-radius: 5px;
+      }
+  body
+    #info Move your mouse over the canvas
+    #coordinates Clicked Coordinates:<br>
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js")
+    script.
+      const socket = io('http://localhost:5000');
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // Create a large grid helper
+      const size = 1000;
+      const divisions = 100;
+      const gridHelper = new THREE.GridHelper(size, divisions);
+      scene.add(gridHelper);
+
+      // Create axes helper
+      const axesHelper = new THREE.AxesHelper(500);
+      scene.add(axesHelper);
+
+      // Set camera position
+      camera.position.z = 1000;
+      camera.position.y = 500;
+      camera.position.x = 500;
+      camera.lookAt(0, 0, 0);
+
+      // Track and display mouse coordinates
+      let mouse = new THREE.Vector2();
+      let raycaster = new THREE.Raycaster();
+      let plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+      let planeIntersect = new THREE.Vector3();
+
+      let whiteDot;
+      let greenDot;
+      let targetPosition = new THREE.Vector3();
+      let whiteDotPosition = new THREE.Vector3();
+      let moveSpeed = 1;
+      let isFailed = false;
+      let isProcessComplete = false;
+
+     
+      function createDot(color, size) {
+        const geometry = new THREE.SphereGeometry(size, 32, 32);
+        const material = new THREE.MeshBasicMaterial({ color: color });
+        const dot = new THREE.Mesh(geometry, material);
+        scene.add(dot);
+        return dot;
+      }
+
+      // Create green dot and set its position
+      function setRandomGreenDotPosition() {
+        const randomX = Math.random() * 2000 - 1000;
+        const randomY = Math.random() * 2000 - 1000;
+        greenDot.position.set(randomX, randomY, 0);
+        targetPosition.copy(greenDot.position);
+      }
+
+      greenDot = createDot(0x00ff00, 10);
+      setRandomGreenDotPosition();
+
+      window.addEventListener('mousemove', (event) => {
+        if (isFailed || isProcessComplete) return; 
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        raycaster.ray.intersectPlane(plane, planeIntersect);
+
+        let xValue = planeIntersect.x;
+        let yValue = planeIntersect.y;
+        let zValue = (event.clientY / window.innerHeight) * 1000 - 500;
+
+        document.getElementById('info').innerHTML = `X: ${xValue.toFixed(2)}, Y: ${yValue.toFixed(2)}, Z: ${zValue.toFixed(2)}`;
+      });
+
+      // Capture coordinates on click and place white dot
+      window.addEventListener('click', () => {
+        if (isFailed || isProcessComplete) return; 
+        if (!whiteDot) {
+          whiteDotPosition.set(planeIntersect.x, planeIntersect.y, (mouse.y + 1) * 0.5 * 1000 - 500);
+          whiteDot = createDot(0xffffff, 10);  
+          whiteDot.position.copy(whiteDotPosition);
+
+          let xValue = planeIntersect.x.toFixed(2);
+          let yValue = planeIntersect.y.toFixed(2);
+          let zValue = ((mouse.y + 1) * 0.5 * 1000 - 500).toFixed(2);
+
+          let coordinatesDiv = document.getElementById('coordinates');
+          coordinatesDiv.innerHTML += `<br>X: ${xValue}, Y: ${yValue}, Z: ${zValue}`;
+          
+          // Send coordinates to Dashboard with socket.io
+          socket.emit('startMovement', { x: whiteDotPosition.x, y: whiteDotPosition.y, z: whiteDotPosition.z });
+
+          // Check coordinate range and determine status
+          const isWithinBounds = (value) => value >= -1000 && value <= 1000;
+          if (!isWithinBounds(whiteDotPosition.x) || !isWithinBounds(whiteDotPosition.y) || !isWithinBounds(whiteDotPosition.z)) {
+            isFailed = true;
+            socket.emit('statusUpdate', 'FAILED');
+            socket.emit('processCompletion', { status: 'FAILED', coordinates: { x: whiteDotPosition.x, y: whiteDotPosition.y, z: whiteDotPosition.z } });
+          } else {
+            // Change status from WAITING to IN PROGRESS
+            socket.emit('statusUpdate', 'IN PROGRESS');
+          }
+        }
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        if (whiteDot && !isFailed && !isProcessComplete) {
+          
+          let direction = targetPosition.clone().sub(whiteDot.position).normalize();
+          let distance = whiteDot.position.distanceTo(targetPosition);
+          
+          if (distance > moveSpeed) {
+            whiteDot.position.add(direction.multiplyScalar(moveSpeed));
+            
+            socket.emit('coordinateUpdate', { x: whiteDot.position.x, y: whiteDot.position.y, z: whiteDot.position.z });
+
+            const whiteDotScreenPosition = whiteDot.position.clone().project(camera);
+            const isWhiteDotVisible = (whiteDotScreenPosition.x >= -1 && whiteDotScreenPosition.x <= 1) &&
+                                      (whiteDotScreenPosition.y >= -1 && whiteDotScreenPosition.y <= 1);
+
+            if (!isWhiteDotVisible) {
+              isFailed = true;
+              socket.emit('statusUpdate', 'FAILED');
+              socket.emit('processCompletion', { status: 'FAILED', coordinates: { x: whiteDot.position.x, y: whiteDot.position.y, z: whiteDot.position.z } });
+            }
+          } else {
+            whiteDot.position.copy(targetPosition);
+          
+            socket.emit('statusUpdate', 'SUCCESS');
+            socket.emit('processCompletion', { status: 'SUCCESS' });
+            
+            isProcessComplete = true;
+            setTimeout(() => {
+              location.reload();
+              greenDot = null;
+              whiteDot = null;
+            }, 1000);
+          }
+        }
+
+        
+        if (isFailed && !isProcessComplete) {
+          isProcessComplete = true;
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        }
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Resize the renderer on window resize
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
